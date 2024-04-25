@@ -10,7 +10,9 @@ m = 2*bits_to_send-1;
 % and a negative box to represent a zero
 m_us = upsample(m, SymbolPeriod);
 m_boxy = conv(m_us, ones(SymbolPeriod, 1));
+figure()
 plot(m_boxy); % visualize the boxy signal
+title('original')
 
 soundsc(m_boxy,Fs);
 

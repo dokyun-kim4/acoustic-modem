@@ -13,7 +13,6 @@ start_idx = find_start_of_signal(y_r,x_sync);
 y_t = y_r(start_idx+length(x_sync):end); % y_t is the signal which starts at the beginning of the transmission
 
 soundsc(y_t, Fs);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Put your decoder code here
 
 t = (0:1:length(y_t) - 1)*(1/Fs);
 th = (-100:1:99)*(1/Fs);
@@ -34,18 +33,22 @@ title("filtered")
 
 soundsc(filtered, Fs);
 
-filtered = filtered(1:4096);
-filtered(abs(filtered) < 100) = [];
 
+filtered(abs(filtered) < 100) = [];
+filtered = filtered(1:3520);
 filtered(filtered > 0) = 1;
 filtered(filtered < 0) = 0;
+filtered = downsample(filtered, 10);
 
 figure()
 plot(filtered)
-title("kkong kkong")
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+title("recreated digital signal")
+
+% add filler 0s to make the length multiples of 8
+filler = zeros(8-mod(length(filtered),8),1);
+filtered = [filtered; filler];
 
 % convert to a string assuming that x_d is a vector of 1s and 0s
 % representing the decoded bits
-a= BitsToString(filtered(1:3520));
+a= BitsToString(filtered);
 
